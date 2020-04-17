@@ -1,0 +1,13 @@
+{
+	"engines": {
+		"rotationSpeed": 127,
+		"linearSpeed": 255,
+		"direction": "stop",
+		"enable": false
+	}
+	"camera": {
+		"positionX": 90,
+		"positionY": 0,
+		"laserEnable": false
+	}
+}

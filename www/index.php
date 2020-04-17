@@ -49,9 +49,8 @@
 		<div class="container-fluid">
 			<div class="row p-0">
 				<div class="col-sm-12 col-md-8 col-lg-7 p-0">
-					<img class="videoCamera" src="http://sdwad5.ru:8081" alt="Video from camera" />
-				</div>
-				<div class="col bg-dark">
+					<img class="videoCamera" src="http://sdwad5.ru:8081/stream/video.mjpeg" alt="Video from camera" />
+				</div>				<div class="col bg-dark">
 					<div class="row">
 						<div class="col-xl-2 col-lg-3 col-md-5 col-sm-12 border-right">
 							<form action="index.php" method="post">

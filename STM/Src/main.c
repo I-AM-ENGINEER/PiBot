@@ -20,6 +20,7 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "tim.h"
 #include "usart.h"
 #include "gpio.h"
 
@@ -47,11 +48,49 @@
 
 /* USER CODE BEGIN PV */
 
+#define EN1A_CH 		TIM_CHANNEL_1
+#define EN1B_CH 		TIM_CHANNEL_2
+#define EN2A_CH 		TIM_CHANNEL_3
+#define EN2B_CH 		TIM_CHANNEL_4
+
+#define EN_TIM 			htim2
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 /* USER CODE BEGIN PFP */
+
+void EN_stop(){
+	__HAL_TIM_SET_COMPARE(&EN_TIM, EN1A_CH, 0);
+	__HAL_TIM_SET_COMPARE(&EN_TIM, EN1B_CH, 0);
+	__HAL_TIM_SET_COMPARE(&EN_TIM, EN2A_CH, 0);
+	__HAL_TIM_SET_COMPARE(&EN_TIM, EN2B_CH, 0);
+}
+
+void forward(uint8_t speed){
+	EN_stop();
+	__HAL_TIM_SET_COMPARE(&EN_TIM, EN1A_CH, speed);
+	__HAL_TIM_SET_COMPARE(&EN_TIM, EN2A_CH, speed);
+}
+
+void backward(uint8_t speed){
+	EN_stop();
+	__HAL_TIM_SET_COMPARE(&EN_TIM, EN1B_CH, speed);
+	__HAL_TIM_SET_COMPARE(&EN_TIM, EN2B_CH, speed);
+}
+
+void left(uint8_t speed){
+	EN_stop();
+	__HAL_TIM_SET_COMPARE(&EN_TIM, EN1A_CH, speed);
+	__HAL_TIM_SET_COMPARE(&EN_TIM, EN2B_CH, speed);
+}
+
+void right(uint8_t speed){
+	EN_stop();
+	__HAL_TIM_SET_COMPARE(&EN_TIM, EN1B_CH, speed);
+	__HAL_TIM_SET_COMPARE(&EN_TIM, EN2A_CH, speed);
+}
 
 /* USER CODE END PFP */
 
@@ -90,16 +129,60 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_USART1_UART_Init();
+  MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
-
+	
+	//HAL_TIM_PWM_Init(&htim2);
+	
+	HAL_TIM_Base_Start(&EN_TIM);
+	
+	HAL_TIM_PWM_Start(&EN_TIM, EN1A_CH);
+	HAL_TIM_PWM_Start(&EN_TIM, EN1B_CH);
+  HAL_TIM_PWM_Start(&EN_TIM, EN2A_CH);
+	HAL_TIM_PWM_Start(&EN_TIM, EN2B_CH);
+	
+	
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-		HAL_GPIO_TogglePin(LED_GPIO_Port, LED_Pin);
-		HAL_Delay(1000);
+		
+		//for(uint8_t i = 0; i < 250; i++){
+		//	__HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_1, i);
+		//	HAL_Delay(10);
+		//}
+		
+		
+		uint8_t data;
+		
+		while(HAL_UART_Receive(&huart1, &data, 1, 100) != HAL_OK);
+		
+		switch(data){
+			case '2':
+				forward(255);
+			break;
+			case '3':
+				backward(255);
+			break;
+			case '4':
+				left(255);
+			break;
+			case '5':
+				right(255);
+			break;
+			default:
+				EN_stop();
+			break;
+		}
+		
+		if(data == '2'){
+			
+		}else if(data == '0'){
+			
+		}
+		
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */

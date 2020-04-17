@@ -2,6 +2,7 @@
 "stm\startup_stm32f103xb.o"
 "stm\main.o"
 "stm\gpio.o"
+"stm\tim.o"
 "stm\usart.o"
 "stm\stm32f1xx_it.o"
 "stm\stm32f1xx_hal_msp.o"
